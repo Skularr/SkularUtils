@@ -5,8 +5,8 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from ..config.database import get_database
-from ..models.generic import AccessTokenData
 from .auth import get_token_data
+from ..models.token import AccessTokenData
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
