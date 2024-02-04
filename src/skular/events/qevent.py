@@ -2,19 +2,11 @@ import asyncio
 import json
 from asyncio import Queue
 from os import getenv
-from typing import TypedDict
 
 from httpx import AsyncClient
 from loguru import logger
 
-
-class QData(TypedDict):
-    id: str
-    poducer: str
-    topic: str
-    content: dict
-    action: str
-    org: str
+from .model import QData
 
 
 class Event:
