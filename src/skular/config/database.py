@@ -16,6 +16,7 @@ class Database:
 
 
 async def get_database(db_name: str) -> AsyncIOMotorDatabase:
+    db_name = db_name.replace('.', '_')
     client = Database.client
     database: AsyncIOMotorDatabase = client[db_name]
     return database
