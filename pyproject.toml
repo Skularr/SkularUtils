@@ -1,9 +1,5 @@
 [build-system]
-requires = [
-    "hatchling",
-    "loguru~=0.7",
-    "httpx~=0.2"
-]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
@@ -11,6 +7,10 @@ name = "skular"
 version = "0.0.1"
 authors = [
     { name = "Rudransh Jagannath", email = "jrudransh@protonmail.com" },
+]
+dependencies = [
+    "loguru~=0.7",
+    "httpx~=0.2"
 ]
 description = "Utilities for Skular ERP"
 readme = "README.md"
