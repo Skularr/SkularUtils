@@ -2,11 +2,12 @@ import asyncio
 import json
 from asyncio import Queue
 from os import getenv
+from typing import Callable
 
 from httpx import AsyncClient
 from loguru import logger
 
-from .model import QData
+from ..models.qdata import QData
 
 
 class Event:
@@ -15,16 +16,19 @@ class Event:
     __stop_success = Queue()
 
     @classmethod
-    def start_loop(cls):
+    def start_loop(cls, topic: str, event_handler_class: Callable):
+        """
+        Starts the event loop and registers it with the given topic and pass incoming data
+        to the event_handler_class and execute the event handler asyncronusly.
+        """
         loop = asyncio.get_event_loop()
-        asyncio.run_coroutine_threadsafe(cls.listen(), loop)
+        asyncio.run_coroutine_threadsafe(cls.listen(topic, event_handler_class), loop)
 
     @classmethod
-    async def listen(cls):
+    async def listen(cls, topic, event_handler_class):
         headers = {
             'x-token': getenv('TOKEN')
         }
-        topic = 'skular'
         logger.debug(f"Listening to events on topic: {topic}..")
         cls._connected = True
         while not cls._stopped:
@@ -35,6 +39,8 @@ class Event:
             if success:
                 data: QData = await res.json()
                 logger.debug(f"Event recieved successfully....\n{json.dumps(data, indent=4)}")
+                operation = event_handler_class(data)
+                await operation()
 
         await cls.__stop_success.put(True)
         logger.debug(f"Event listener of topic: {topic} is stopped...")

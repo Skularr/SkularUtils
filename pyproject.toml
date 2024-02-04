@@ -4,20 +4,23 @@ build-backend = "hatchling.build"
 
 [project]
 name = "skular"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
     { name = "Rudransh Jagannath", email = "jrudransh@protonmail.com" },
 ]
 dependencies = [
     "loguru~=0.7",
-    "httpx~=0.2"
+    "httpx~=0.2",
+    "pydantic[email]~=2.5",
+    "starlette==0.27.0",
+    "pyjwt[crypto]~=2.8",
+    "motor~=3.3"
 ]
 description = "Utilities for Skular ERP"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 
