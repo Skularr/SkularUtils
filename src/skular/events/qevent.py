@@ -16,7 +16,7 @@ class Event:
     __stop_success = Queue()
 
     @classmethod
-    def start_loop(cls, topic: str, event_handler_class: Callable):
+    async def start_loop(cls, topic: str, event_handler_class: Callable):
         """
         Starts the event loop and registers it with the given topic and pass incoming data
         to the event_handler_class and execute the event handler asyncronusly.
@@ -29,18 +29,21 @@ class Event:
         headers = {
             'x-token': getenv('TOKEN')
         }
-        logger.debug(f"Listening to events on topic: {topic}..")
+        logger.debug(f"Starting listener for events on topic: {topic}..")
         cls._connected = True
+        client = AsyncClient(base_url=getenv("QUEUE_SERVICE_URL"), headers=headers, timeout=10)
         while not cls._stopped:
-            async with AsyncClient() as client:
-                res = await client.get(f'{getenv("QUEUE_SERVICE_URL")}/listen/{topic}', headers=headers)
-
-            success = res.status_code == 201
-            if success:
-                data: QData = await res.json()
-                logger.debug(f"Event recieved successfully....\n{json.dumps(data, indent=4)}")
-                operation = event_handler_class(data)
-                await operation()
+            logger.debug(f"Listening to events on topic: {topic}...")
+            try:
+                res = await client.get(f'/listen/{topic}')
+                success = res.status_code == 201
+                if success:
+                    data: QData = await res.json()
+                    logger.debug(f"Event recieved successfully....\n{json.dumps(data, indent=4)}")
+                    operation = event_handler_class(data)
+                    await operation()
+            except Exception as e:
+                logger.error(f"Something is wrong, ERROR: {str(e)}...")
 
         await cls.__stop_success.put(True)
         logger.debug(f"Event listener of topic: {topic} is stopped...")
