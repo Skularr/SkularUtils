@@ -1,5 +1,4 @@
 import asyncio
-import json
 from asyncio import Queue
 from os import getenv
 from typing import Callable
@@ -33,13 +32,14 @@ class Event:
         cls._connected = True
         client = AsyncClient(base_url=getenv("QUEUE_SERVICE_URL"), headers=headers, timeout=10)
         while not cls._stopped:
-            logger.debug(f"Listening to events on topic: {topic}...")
             try:
                 res = await client.get(f'/listen/{topic}')
                 success = res.status_code == 201
                 if success:
                     data: QData = await res.json()
-                    logger.debug(f"Event recieved successfully....\n{json.dumps(data, indent=4)}")
+                    logger.debug(
+                        f"Event recieved from producer: {data.get('producer')}, action: {data.get('action')}...."
+                    )
                     operation = event_handler_class(data)
                     await operation()
             except Exception as e:
