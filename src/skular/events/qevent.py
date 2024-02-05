@@ -36,13 +36,15 @@ class Event:
                 res = await client.get(f'/listen/{topic}')
                 success = res.status_code == 200
                 if success:
-                    data: QData = await res.json()
-                    logger.debug(
-                        f"Event recieved from producer: {data.get('producer')}, action: {data.get('action')}...."
-                    )
-                    operation = event_handler_class(data)
-                    await operation()
+                    data: QData = res.json()
+                    if data is not None and data.get('producer'):
+                        logger.debug(
+                            f"Event recieved from producer: {data.get('producer')}, action: {data.get('action')}...."
+                        )
+                        operation = event_handler_class(data)
+                        await operation()
             except Exception as e:
+                # print(traceback.format_exc())
                 logger.error(f"Something is wrong, ERROR: {str(e)}...")
 
         await cls.__stop_success.put(True)
