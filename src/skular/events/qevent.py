@@ -34,7 +34,7 @@ class Event:
         while not cls._stopped:
             try:
                 res = await client.get(f'/listen/{topic}')
-                success = res.status_code == 201
+                success = res.status_code == 200
                 if success:
                     data: QData = await res.json()
                     logger.debug(
