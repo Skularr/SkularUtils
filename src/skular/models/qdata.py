@@ -3,7 +3,7 @@ from typing import TypedDict
 
 class QData(TypedDict):
     id: str
-    poducer: str
+    producer: str
     topic: str
     content: dict
     action: str

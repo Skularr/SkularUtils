@@ -46,9 +46,9 @@ class Event:
         logger.debug(f"Event listener of topic: {topic} is stopped...")
 
     @classmethod
-    async def send(cls, topic: str, action: str, organization: str, content: dict) -> bool:
+    async def send(cls, producer: str, topic: str, action: str, organization: str, content: dict) -> bool:
         data = {
-            "poducer": "skular",
+            "producer": producer,
             "topic": topic,
             "content": content,
             "action": action,
