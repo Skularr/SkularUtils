@@ -46,6 +46,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         request.state.user = user_id
         request.state.token_data = token_data
         request.state.organization = organization
+        request.state.access_token = access_token
 
         db_name = self.kwargs.get('db_name', organization)
         request.state.db = await get_database(db_name)
