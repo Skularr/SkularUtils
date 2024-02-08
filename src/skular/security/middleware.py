@@ -21,7 +21,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
     async def authentication_middleware(self, request: Request, call_next):
         full_path = request.url.path
-        mount_path = request.scope.get('path')
+        root_path: str = request.scope.get('root_path')
+        mount_path = full_path.removeprefix(root_path)
         logger.debug(f"Full request path: {full_path}")
         logger.debug(f"Requested path in mount: {mount_path}")
 
