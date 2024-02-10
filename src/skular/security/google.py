@@ -7,7 +7,7 @@ class Google:
     google_auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
     scope = "openid email profile"
     response_type = "code"
-    access_url = getenv("ACCESS_SERVICE_URL")
+    redirect_base_url = getenv("REDIRECT_BASE_URL")
     client_id = getenv("CLIENT_ID")
     client_secret = getenv("CLIENT_SECRET")
     token_url = "https://oauth2.googleapis.com/token"
@@ -17,7 +17,7 @@ class Google:
     async def get_url(cls, state, redirect: str) -> URL:
         query = {
             "client_id": cls.client_id,
-            "redirect_uri": f'{cls.access_url}/{redirect}',
+            "redirect_uri": f'{cls.redirect_base_url}/{redirect}',
             "scope": cls.scope,
             "response_type": cls.response_type,
             "state": state
@@ -31,7 +31,7 @@ class Google:
             "code": code,
             "client_id": cls.client_id,
             "client_secret": cls.client_secret,
-            "redirect_uri": f'{cls.access_url}/{redirect}',
+            "redirect_uri": f'{cls.redirect_base_url}/{redirect}',
             "grant_type": "authorization_code"
         }
         client = AsyncClient()
