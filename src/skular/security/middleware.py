@@ -23,8 +23,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
         full_path = request.url.path
         root_path: str = request.scope.get('root_path')
         mount_path = full_path.removeprefix(root_path)
-        logger.debug(f"Full request path: {full_path}")
-        logger.debug(f"Requested path in mount: {mount_path}")
+        # logger.debug(f"Full request path: {full_path}")
+        # logger.debug(f"Requested path in mount: {mount_path}")
 
         if mount_path in self.excluded_urls:
             logger.debug(f"Excluded path: {mount_path}")
